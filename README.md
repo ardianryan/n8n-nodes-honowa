@@ -49,7 +49,7 @@ Node ini menggunakan **API Key** untuk autentikasi.
 ## 🛠️ Cara Penggunaan
 
 ### Memilih Session secara Otomatis
-Pada bagian **Session Name or ID**, Anda tidak perlu mengetik ID manual. Klik dropdown untuk melihat daftar session yang sedang aktif di server Anda.
+Pada bagian **Session Name or ID**, Anda tidak perlu mengetik ID manual. Klik dropdown untuk melihat daftar session yang sedang aktif di server Anda. n8n akan otomatis menampilkan status session tersebut (misal: `ready` atau `close`).
 
 ### Mengirim File (Binary)
 Jika Anda memiliki file dari node sebelumnya (misal: node *Read Binary File* atau *HTTP Request*), pilih Operation: **Send Media (Binary)**. Masukkan nama property binary-nya (default: `data`).
