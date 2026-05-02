@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="nodes/HonoWa/honowa.png" alt="HonoWA" width="150" />
+  <img src="https://static-r2-apac.ppti.me/uploads/logo/logo.png" alt="HonoWA" width="150" />
   <h1>n8n-nodes-honowa</h1>
   <p><strong>Integrasi WhatsApp API (HonoWA) untuk n8n</strong></p>
 </div>
