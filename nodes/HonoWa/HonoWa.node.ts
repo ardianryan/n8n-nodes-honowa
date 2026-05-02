@@ -377,14 +377,14 @@ export class HonoWa implements INodeType {
 						this,
 						'honoWaApi',
 						options,
-					)) as any;
+					)) as IDataObject | IDataObject[];
 
 					// Handle different API response structures (direct array or nested in .data)
-					const sessions = Array.isArray(response) ? response : response.data || [];
+					const sessions = (Array.isArray(response) ? response : (response.data as IDataObject[]) || []) as IDataObject[];
 
-					return sessions.map((session: any) => {
-						const name = session.name || session.id || 'Unknown Session';
-						const status = session.status || 'unknown';
+					return sessions.map((session) => {
+						const name = (session.name || session.id || 'Unknown Session') as string;
+						const status = (session.status || 'unknown') as string;
 						return {
 							name: `${name} (${status})`,
 							value: name,
