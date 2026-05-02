@@ -1,105 +1,69 @@
 <div align="center">
   <img src="nodes/HonoWa/honowa.png" alt="HonoWA" width="150" />
   <h1>n8n-nodes-honowa</h1>
-  <p><strong>n8n community node for HonoWA — Unofficial WhatsApp API</strong></p>
+  <p><strong>Integrasi WhatsApp API (HonoWA) untuk n8n</strong></p>
 </div>
 
-This is an [n8n](https://n8n.io/) community node that lets you interact with your [HonoWA](https://github.com/elianhardyy/hono-wa-web-multidevice) server directly from n8n workflows.
-
-HonoWA is a modern WhatsApp multi-session management platform built with Hono.js, offering REST API, AI integration, and admin dashboard.
-
-[n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/reference/license/) workflow automation platform.
-
-[Installation](#installation) · [Operations](#operations) · [Credentials](#credentials) · [Usage](#usage) · [Resources](#resources)
+Package ini memungkinkan Anda untuk menghubungkan workflow **n8n** dengan server **HonoWA** (Unofficial WhatsApp API). Anda dapat mengelola sesi, mengirim pesan teks, media, hingga broadcast langsung dari n8n.
 
 ---
 
-## Installation
+## 🚀 Fitur Utama
 
-Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation.
-
-**npm package name:** `n8n-nodes-honowa`
-
----
-
-## Operations
-
-### Session
-| Operation | Description |
-|:----------|:------------|
-| **List** | Get all WhatsApp sessions |
-| **Get Status** | Check if a session is `ready` or `disconnected` |
-| **Delete** | Logout and remove a session |
-
-### Message
-| Operation | Description |
-|:----------|:------------|
-| **Send Text** | Send a text message to a phone number |
-| **Send Media (URL)** | Send media (image/video/audio/doc) from a URL |
-| **Send Media (Binary)** | Send a file directly from n8n binary data |
-| **Send Group** | Send a message to a WhatsApp group |
-
-### Broadcast
-| Operation | Description |
-|:----------|:------------|
-| **Send Bulk** | Send a message to multiple phone numbers with configurable delay |
+- **Multi-Session Support**: Pilih session WhatsApp yang aktif langsung dari dropdown.
+- **Message Operations**: Kirim Teks, Media (via URL), dan Media (via Binary/Upload file).
+- **Group Messaging**: Kirim pesan ke WhatsApp Group.
+- **Broadcast Engine**: Kirim pesan massal dengan pengaturan delay otomatis.
+- **Session Management**: Cek status session atau hapus session langsung dari workflow.
+- **AI Ready**: Mendukung fitur `usableAsTool` untuk digunakan oleh AI Agent di n8n.
 
 ---
 
-## Credentials
+## 📦 Instalasi
 
-This node uses **API Key** authentication.
+### Community Nodes (Rekomendasi)
+Di n8n Anda, buka **Settings > Community Nodes > Install a node** dan masukkan:
+`n8n-nodes-honowa`
 
-1. Open your HonoWA Dashboard → **Settings** page.
-2. Copy your **API Key**.
-3. In n8n, create a new **HonoWA API** credential:
-   - **Base URL**: Your HonoWA server URL (e.g. `http://localhost:3000`)
-   - **API Key**: Paste your API key
-
-The credential is tested by calling `GET /sessions` on your HonoWA server.
-
----
-
-## Usage
-
-### Send a Text Message
-
-1. Add the **HonoWA** node to your workflow.
-2. Select Resource: **Message** → Operation: **Send Text**.
-3. Enter the **Session ID**, **Phone Number** (international format, e.g. `628123456789`), and **Message**.
-
-### Send Media from URL
-
-1. Select Resource: **Message** → Operation: **Send Media (URL)**.
-2. Provide the **Media URL** (direct link to image/video/audio/document).
-
-### Send File from n8n
-
-1. Connect a node that outputs binary data (e.g. HTTP Request, Read Binary File).
-2. Select Resource: **Message** → Operation: **Send Media (Binary)**.
-3. Set the **Binary Property** name (default: `data`).
-
-### Broadcast
-
-1. Select Resource: **Broadcast** → Operation: **Send Bulk**.
-2. Enter comma-separated **Phone Numbers**.
-3. Set **Delay (ms)** — minimum `5000` recommended to avoid WhatsApp rate limiting.
+### Instalasi Manual (Development)
+Jika ingin melakukan build sendiri:
+1. Clone repository ini.
+2. Jalankan `npm install`.
+3. Jalankan `npm run build`.
+4. Link ke n8n lokal Anda.
 
 ---
 
-## Resources
+## 🔐 Konfigurasi Credential
 
-- [HonoWA Repository](https://github.com/elianhardyy/hono-wa-web-multidevice)
-- [n8n Community Nodes Documentation](https://docs.n8n.io/integrations/community-nodes/)
+Node ini menggunakan **API Key** untuk autentikasi.
+
+1. Buka Dashboard HonoWA Anda.
+2. Masuk ke menu **Settings** dan salin **API Key** Anda.
+3. Di n8n, buat credential baru tipe **HonoWA API**:
+   - **Base URL**: URL server HonoWA Anda (contoh: `http://localhost:3000`).
+   - **API Key**: Masukkan key yang sudah disalin.
 
 ---
 
-## License
+## 🛠️ Cara Penggunaan
 
+### Memilih Session secara Otomatis
+Pada bagian **Session Name or ID**, Anda tidak perlu mengetik ID manual. Klik dropdown untuk melihat daftar session yang sedang aktif di server Anda.
+
+### Mengirim File (Binary)
+Jika Anda memiliki file dari node sebelumnya (misal: node *Read Binary File* atau *HTTP Request*), pilih Operation: **Send Media (Binary)**. Masukkan nama property binary-nya (default: `data`).
+
+### Broadcast dengan Aman
+Gunakan Operation: **Send Bulk**. Masukkan daftar nomor HP yang dipisahkan koma. Secara default, delay disetel **5000ms** (5 detik) untuk menghindari risiko banned dari WhatsApp.
+
+---
+
+## 📜 Lisensi
 [MIT](LICENSE.md)
 
 ---
 
 <div align="center">
-  Made with ❤️ by <a href="https://github.com/ardianryan">Ryan Ardian</a>
+  Dikembangkan dengan ❤️ oleh <a href="https://github.com/ardianryan">Ryan Ardian</a>
 </div>
