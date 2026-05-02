@@ -372,16 +372,27 @@ export class HonoWa implements INodeType {
 					json: true,
 				};
 
-				const sessions = (await this.helpers.httpRequestWithAuthentication.call(
-					this,
-					'honoWaApi',
-					options,
-				)) as Array<{ id: string; status: string }>;
+				try {
+					const response = (await this.helpers.httpRequestWithAuthentication.call(
+						this,
+						'honoWaApi',
+						options,
+					)) as any;
 
-				return sessions.map((session) => ({
-					name: `${session.id} (${session.status})`,
-					value: session.id,
-				}));
+					// Handle different API response structures (direct array or nested in .data)
+					const sessions = Array.isArray(response) ? response : response.data || [];
+
+					return sessions.map((session: any) => {
+						const name = session.name || session.id || 'Unknown Session';
+						const status = session.status || 'unknown';
+						return {
+							name: `${name} (${status})`,
+							value: name,
+						};
+					});
+				} catch (error) {
+					throw new NodeOperationError(this.getNode(), error as Error);
+				}
 			},
 		},
 	};
