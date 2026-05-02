@@ -1,8 +1,6 @@
 import type {
 	IExecuteFunctions,
-	ILoadOptionsFunctions,
 	INodeExecutionData,
-	INodePropertyOptions,
 	INodeType,
 	INodeTypeDescription,
 	IHttpRequestOptions,
@@ -153,56 +151,7 @@ export class HonoWa implements INodeType {
 				default: 'sendBulk',
 			},
 
-			// ── Shared: Session ID ──
-			{
-				displayName: 'Session Name or ID',
-				name: 'sessionId',
-				type: 'options',
-				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
-				typeOptions: {
-					loadOptionsMethod: 'getSessions',
-				},
-				required: true,
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['session'],
-						operation: ['getStatus', 'delete'],
-					},
-				},
-			},
-			{
-				displayName: 'Session Name or ID',
-				name: 'sessionId',
-				type: 'options',
-				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
-				typeOptions: {
-					loadOptionsMethod: 'getSessions',
-				},
-				required: true,
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['message'],
-					},
-				},
-			},
-			{
-				displayName: 'Session Name or ID',
-				name: 'sessionId',
-				type: 'options',
-				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
-				typeOptions: {
-					loadOptionsMethod: 'getSessions',
-				},
-				required: true,
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['broadcast'],
-					},
-				},
-			},
+			// ── Message: Phone ──
 
 			// ── Message: Phone ──
 			{
@@ -360,43 +309,6 @@ export class HonoWa implements INodeType {
 		],
 	};
 
-	methods = {
-		loadOptions: {
-			async getSessions(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-				const credentials = await this.getCredentials('honoWaApi');
-				const baseUrl = (credentials.baseUrl as string).replace(/\/$/, '');
-
-				const options: IHttpRequestOptions = {
-					method: 'GET',
-					url: `${baseUrl}/sessions`,
-					json: true,
-				};
-
-				try {
-					const response = (await this.helpers.httpRequestWithAuthentication.call(
-						this,
-						'honoWaApi',
-						options,
-					)) as IDataObject | IDataObject[];
-
-					// Handle different API response structures (direct array or nested in .data)
-					const sessions = (Array.isArray(response) ? response : (response.data as IDataObject[]) || []) as IDataObject[];
-
-					return sessions.map((session) => {
-						const name = (session.name || session.id || 'Unknown Session') as string;
-						const status = (session.status || 'unknown') as string;
-						return {
-							name: `${name} (${status})`,
-							value: name,
-						};
-					});
-				} catch (error) {
-					throw new NodeOperationError(this.getNode(), error as Error);
-				}
-			},
-		},
-	};
-
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
@@ -404,6 +316,7 @@ export class HonoWa implements INodeType {
 		const operation = this.getNodeParameter('operation', 0) as string;
 		const credentials = await this.getCredentials('honoWaApi');
 		const baseUrl = (credentials.baseUrl as string).replace(/\/$/, '');
+		const sessionId = credentials.sessionId as string;
 
 		for (let i = 0; i < items.length; i++) {
 			try {
@@ -422,7 +335,6 @@ export class HonoWa implements INodeType {
 							options,
 						)) as IDataObject;
 					} else if (operation === 'getStatus') {
-						const sessionId = this.getNodeParameter('sessionId', i) as string;
 						const options: IHttpRequestOptions = {
 							method: 'GET',
 							url: `${baseUrl}/session/status/${sessionId}`,
@@ -433,7 +345,6 @@ export class HonoWa implements INodeType {
 							options,
 						)) as IDataObject;
 					} else if (operation === 'delete') {
-						const sessionId = this.getNodeParameter('sessionId', i) as string;
 						const options: IHttpRequestOptions = {
 							method: 'DELETE',
 							url: `${baseUrl}/session/${sessionId}`,
@@ -454,8 +365,6 @@ export class HonoWa implements INodeType {
 
 				// ── MESSAGE ──
 				else if (resource === 'message') {
-					const sessionId = this.getNodeParameter('sessionId', i) as string;
-
 					if (operation === 'sendText') {
 						const phone = this.getNodeParameter('phone', i) as string;
 						const message = this.getNodeParameter('message', i) as string;
@@ -538,8 +447,6 @@ export class HonoWa implements INodeType {
 
 				// ── BROADCAST ──
 				else if (resource === 'broadcast') {
-					const sessionId = this.getNodeParameter('sessionId', i) as string;
-
 					if (operation === 'sendBulk') {
 						const phonesRaw = this.getNodeParameter('phones', i) as string;
 						const message = this.getNodeParameter('message', i) as string;

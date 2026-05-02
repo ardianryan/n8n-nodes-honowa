@@ -34,6 +34,14 @@ export class HonoWaApi implements ICredentialType {
 			description: 'API Key from HonoWA Dashboard (Settings page)',
 			required: true,
 		},
+		{
+			displayName: 'Session ID',
+			name: 'sessionId',
+			type: 'string',
+			default: 'session1',
+			description: 'The WhatsApp Session ID you want to use for this credential',
+			required: true,
+		},
 	];
 
 	authenticate: IAuthenticateGeneric = {
