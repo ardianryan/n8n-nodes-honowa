@@ -11,7 +11,7 @@ export class HonoWaApi implements ICredentialType {
 
 	displayName = 'HonoWA API';
 
-	icon: Icon = 'file:../nodes/HonoWa/honowa.svg';
+	icon: Icon = 'file:../nodes/HonoWa/honowa-logo.svg';
 
 	documentationUrl = 'https://github.com/elianhardyy/hono-wa-web-multidevice';
 
