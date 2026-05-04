@@ -13,7 +13,7 @@ export class HonoWa implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'HonoWA',
 		name: 'honoWa',
-		icon: 'file:honowa.svg',
+		icon: 'file:honowa-logo.svg',
 		group: ['output'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
