@@ -6,7 +6,7 @@ import type {
 	IHttpRequestOptions,
 	IDataObject,
 } from 'n8n-workflow';
-import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
+import { NodeConnectionTypes, NodeOperationError, NodeApiError } from 'n8n-workflow';
 
 export class HonoWa implements INodeType {
 	description: INodeTypeDescription = {
@@ -499,7 +499,7 @@ export class HonoWa implements INodeType {
 					returnData.push(...executionErrorData);
 					continue;
 				}
-				throw error;
+				throw new NodeApiError(this.getNode(), error as any);
 			}
 		}
 
