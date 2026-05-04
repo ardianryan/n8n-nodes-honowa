@@ -5,6 +5,7 @@ import type {
 	INodeTypeDescription,
 	IHttpRequestOptions,
 	IDataObject,
+	JsonObject,
 } from 'n8n-workflow';
 import { NodeConnectionTypes, NodeOperationError, NodeApiError } from 'n8n-workflow';
 
@@ -499,7 +500,7 @@ export class HonoWa implements INodeType {
 					returnData.push(...executionErrorData);
 					continue;
 				}
-				throw new NodeApiError(this.getNode(), error as any);
+				throw new NodeApiError(this.getNode(), error as JsonObject);
 			}
 		}
 
