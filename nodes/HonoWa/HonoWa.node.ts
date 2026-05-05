@@ -38,6 +38,11 @@ export class HonoWa implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
+						name: 'AI',
+						value: 'ai',
+						description: 'AI-powered chat and image generation',
+					},
+					{
 						name: 'Broadcast',
 						value: 'broadcast',
 						description: 'Send bulk messages to multiple contacts',
@@ -51,6 +56,11 @@ export class HonoWa implements INodeType {
 						name: 'Session',
 						value: 'session',
 						description: 'Manage WhatsApp sessions',
+					},
+					{
+						name: 'Status',
+						value: 'status',
+						description: 'Manage WhatsApp Status updates',
 					},
 				],
 				default: 'message',
@@ -151,8 +161,60 @@ export class HonoWa implements INodeType {
 				],
 				default: 'sendBulk',
 			},
-
-			// ── Message: Phone ──
+			// ── AI Operations ──
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['ai'],
+					},
+				},
+				options: [
+					{
+						name: 'Chat',
+						value: 'chat',
+						description: 'Chat with AI (OpenAI, Gemini, Claude)',
+						action: 'Chat with ai',
+					},
+					{
+						name: 'Delete History',
+						value: 'deleteHistory',
+						description: 'Delete your chat history',
+						action: 'Delete ai history',
+					},
+					{
+						name: 'Generate Image',
+						value: 'image',
+						description: 'Generate image from prompt',
+						action: 'Generate an ai image',
+					},
+				],
+				default: 'chat',
+			},
+			// ── Status Operations ──
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['status'],
+					},
+				},
+				options: [
+					{
+						name: 'Create',
+						value: 'create',
+						description: 'Create a new WhatsApp status',
+						action: 'Create a status',
+					},
+				],
+				default: 'create',
+			},
 
 			// ── Message: Phone ──
 			{
@@ -307,6 +369,135 @@ export class HonoWa implements INodeType {
 					},
 				},
 			},
+			// ── AI: Provider ──
+			{
+				displayName: 'Provider',
+				name: 'provider',
+				type: 'options',
+				options: [
+					{
+						name: 'Claude (Anthropic)',
+						value: 'claude',
+					},
+					{
+						name: 'Gemini (Google)',
+						value: 'gemini',
+					},
+					{
+						name: 'OpenAI (GPT-4o)',
+						value: 'openai',
+					},
+				],
+				default: 'gemini',
+				description: 'The AI provider to use',
+				displayOptions: {
+					show: {
+						resource: ['ai'],
+						operation: ['chat', 'image'],
+					},
+				},
+			},
+			// ── AI: Chat Message ──
+			{
+				displayName: 'Message',
+				name: 'aiMessage',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'How can you help me today?',
+				description: 'The message to send to the AI',
+				displayOptions: {
+					show: {
+						resource: ['ai'],
+						operation: ['chat'],
+					},
+				},
+			},
+			// ── AI: Image Prompt ──
+			{
+				displayName: 'Prompt',
+				name: 'prompt',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'A futuristic city at sunset',
+				description: 'The image description for AI to generate',
+				displayOptions: {
+					show: {
+						resource: ['ai'],
+						operation: ['image'],
+					},
+				},
+			},
+			// ── Status: Type ──
+			{
+				displayName: 'Status Type',
+				name: 'statusType',
+				type: 'options',
+				options: [
+					{
+						name: 'Media',
+						value: 'media',
+					},
+					{
+						name: 'Text',
+						value: 'text',
+					},
+				],
+				default: 'text',
+				displayOptions: {
+					show: {
+						resource: ['status'],
+						operation: ['create'],
+					},
+				},
+			},
+			// ── Status: Text ──
+			{
+				displayName: 'Status Text',
+				name: 'statusText',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'My new status update!',
+				displayOptions: {
+					show: {
+						resource: ['status'],
+						operation: ['create'],
+						statusType: ['text'],
+					},
+				},
+			},
+			// ── Status: Media URL ──
+			{
+				displayName: 'Media URL',
+				name: 'statusMediaUrl',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'https://example.com/image.jpg',
+				displayOptions: {
+					show: {
+						resource: ['status'],
+						operation: ['create'],
+						statusType: ['media'],
+					},
+				},
+			},
+			// ── Status: Caption ──
+			{
+				displayName: 'Caption',
+				name: 'statusCaption',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						resource: ['status'],
+						operation: ['create'],
+						statusType: ['media'],
+					},
+				},
+			},
 		],
 	};
 
@@ -323,8 +514,85 @@ export class HonoWa implements INodeType {
 			try {
 				let responseData: IDataObject;
 
+				// ── AI ──
+				if (resource === 'ai') {
+					if (operation === 'chat') {
+						const message = this.getNodeParameter('aiMessage', i) as string;
+						const provider = this.getNodeParameter('provider', i) as string;
+						const options: IHttpRequestOptions = {
+							method: 'POST',
+							url: `${baseUrl}/api/ai/chat`,
+							body: { message, provider },
+						};
+						responseData = (await this.helpers.httpRequestWithAuthentication.call(
+							this,
+							'honoWaApi',
+							options,
+						)) as IDataObject;
+					} else if (operation === 'image') {
+						const prompt = this.getNodeParameter('prompt', i) as string;
+						const provider = this.getNodeParameter('provider', i) as string;
+						const options: IHttpRequestOptions = {
+							method: 'POST',
+							url: `${baseUrl}/api/ai/image`,
+							body: { prompt, provider },
+						};
+						responseData = (await this.helpers.httpRequestWithAuthentication.call(
+							this,
+							'honoWaApi',
+							options,
+						)) as IDataObject;
+					} else if (operation === 'deleteHistory') {
+						const options: IHttpRequestOptions = {
+							method: 'DELETE',
+							url: `${baseUrl}/api/ai/history`,
+						};
+						responseData = (await this.helpers.httpRequestWithAuthentication.call(
+							this,
+							'honoWaApi',
+							options,
+						)) as IDataObject;
+					} else {
+						throw new NodeOperationError(
+							this.getNode(),
+							`Unknown AI operation: ${operation}`,
+							{ itemIndex: i },
+						);
+					}
+				}
+
+				// ── STATUS ──
+				else if (resource === 'status') {
+					if (operation === 'create') {
+						const statusType = this.getNodeParameter('statusType', i) as string;
+						const body: IDataObject = {};
+						if (statusType === 'text') {
+							body.text = this.getNodeParameter('statusText', i) as string;
+						} else {
+							body.mediaUrl = this.getNodeParameter('statusMediaUrl', i) as string;
+							body.caption = this.getNodeParameter('statusCaption', i) as string;
+						}
+						const options: IHttpRequestOptions = {
+							method: 'POST',
+							url: `${baseUrl}/status/${sessionId}`,
+							body,
+						};
+						responseData = (await this.helpers.httpRequestWithAuthentication.call(
+							this,
+							'honoWaApi',
+							options,
+						)) as IDataObject;
+					} else {
+						throw new NodeOperationError(
+							this.getNode(),
+							`Unknown status operation: ${operation}`,
+							{ itemIndex: i },
+						);
+					}
+				}
+
 				// ── SESSION ──
-				if (resource === 'session') {
+				else if (resource === 'session') {
 					if (operation === 'list') {
 						const options: IHttpRequestOptions = {
 							method: 'GET',
