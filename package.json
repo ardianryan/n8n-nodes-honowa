@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-honowa",
-	"version": "0.1.19",
+	"version": "0.1.20",
 	"description": "n8n community node for HonoWA — Unofficial WhatsApp API with multi-session management, messaging, broadcast, and media support.",
 	"license": "MIT",
 	"homepage": "https://github.com/ardianryan/n8n-nodes-honowa",
