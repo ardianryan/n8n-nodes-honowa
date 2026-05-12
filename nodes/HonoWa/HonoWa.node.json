@@ -21,8 +21,5 @@
 		"group",
 		"broadcast",
 		"status"
-	],
-	"subcategories": {
-		"Communication": ["Messaging"]
-	}
+	]
 }

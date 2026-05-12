@@ -42,8 +42,8 @@ export const sessionOperations: INodeProperties[] = [
 ];
 
 export const sessionProperties: INodeProperties[] = [
-	// Saat ini tidak ada input parameter khusus (properties) tambahan untuk session.
-	// Karena parameter sessionId sudah diambil secara global dari credentials.
+	// Currently there are no additional input parameters (properties) for session.
+	// The sessionId parameter is already retrieved globally from credentials.
 ];
 
 export const executeSessionOperations: OperationExecutor = async function (
