@@ -89,7 +89,7 @@ export const executeStatusOperations: OperationExecutor = async function (
 	this: IExecuteFunctions,
 	operation: string,
 	itemIndex: number,
-): Promise<any> {
+): Promise<IDataObject | IDataObject[]> {
 	const credentials = await this.getCredentials('honoWaApi');
 	const baseUrl = (credentials.baseUrl as string).replace(/\/$/, '');
 	const sessionId = credentials.sessionId as string;
