@@ -134,7 +134,7 @@ export class HonoWa implements INodeType {
 
 		for (let i = 0; i < items.length; i++) {
 			try {
-				let responseData: IDataObject;
+				let responseData: IDataObject | IDataObject[];
 
 				// ── AI ──
 				if (resource === 'ai') {
