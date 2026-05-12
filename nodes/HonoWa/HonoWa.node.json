@@ -1,0 +1,28 @@
+{
+	"node": "n8n-nodes-honowa.honoWa",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Communication"],
+	"resources": {
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/elianhardyy/hono-wa-web-multidevice"
+			}
+		]
+	},
+	"alias": [
+		"WhatsApp",
+		"WA",
+		"HonoWA",
+		"Hono WhatsApp",
+		"messaging",
+		"chat",
+		"send message",
+		"group",
+		"broadcast",
+		"status"
+	],
+	"subcategories": {
+		"Communication": ["Messaging"]
+	}
+}
