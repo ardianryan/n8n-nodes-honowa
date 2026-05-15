@@ -74,7 +74,7 @@ export const statusProperties: INodeProperties[] = [
 		name: 'statusMediaUrl',
 		type: 'string',
 		default: '',
-		placeholder: 'https://example.com/image.jpg',
+		placeholder: 'e.g. https://your-server.com/image.jpg',
 		displayOptions: {
 			show: {
 				resource: ['status'],

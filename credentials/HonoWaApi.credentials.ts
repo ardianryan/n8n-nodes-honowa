@@ -20,7 +20,7 @@ export class HonoWaApi implements ICredentialType {
 			displayName: 'Base URL',
 			name: 'baseUrl',
 			type: 'string',
-			default: 'https://honowa.elianha.my.id',
+			default: '',
 			placeholder: 'http://localhost:4000',
 			description: 'Base URL of your HonoWA server. Use https://honowa.elianha.my.id for cloud, or your self-hosted URL (e.g., http://localhost:4000)',
 			required: true,

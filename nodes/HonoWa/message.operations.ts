@@ -91,7 +91,7 @@ export const messageProperties: INodeProperties[] = [
 		type: 'string',
 		required: true,
 		default: '',
-		placeholder: 'https://example.com/image.jpg',
+		placeholder: 'e.g. https://your-server.com/image.jpg',
 		description: 'URL of the media file to send (image, video, audio, document)',
 		displayOptions: {
 			show: {
